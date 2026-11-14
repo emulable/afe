@@ -1,0 +1,193 @@
+{
+  "about": [
+    "THE one list of AI Audio components and control-panel tools. Read by setup\\install.ps1",
+    "(the Components window: add, repair, remove) and scripts\\panel_core.ps1 (the control panel,",
+    "which shows a tool only when the files under its 'needs' exist). All paths are relative",
+    "to the kit folder. Keep this file ASCII-only.",
+    "components[]: key, name, size, desc are shown in the Components window.",
+    "  remove      folders deleted when the component is removed",
+    "  keep        the user's own work inside those folders: NEVER deleted",
+    "  models      downloaded AI models: deleted too unless the user keeps models; a path that",
+    "              another still-installed component also lists is left alone",
+    "  locks       package lists in setup\\locks, used to trim the package cache afterwards",
+    "  also_stop   panel tools to stop first, besides the tools that belong to the component",
+    "  remove_note shown before removing: what else stops working",
+    "The install steps themselves are code: the Install-<key> functions in setup\\install.ps1.",
+    "  min_gb      graphics memory the component needs to be worth installing (0 = runs without a",
+    "              graphics card). Below that it is listed but unticked, with a note.",
+    "presets: named picks offered as buttons in the Components window (Select all and Select none",
+    "  are always there). 'recommended' is the kit author's own line-up: edit it freely.",
+    "tools[]: one control-panel row each. kind: web = browser app with a port, app = desktop",
+    "  window, watch = drop-folder tool, files = drop files on it. bat is in launchers\\."
+  ],
+  "presets": {
+    "recommended": {
+      "name": "Recommended",
+      "desc": "The author's own line-up: everything except Abogen, whose job Narrate also does.",
+      "keys": ["core", "transcribe", "narrate", "acestep", "hum", "separate", "applio", "comfyui"]
+    }
+  },
+  "components": [
+    {
+      "key": "core", "name": "Core", "size": "~0.3 GB", "removable": false,
+      "desc": "The folder layout, private Python (nothing system-wide), the control panel and Stop everything. Always installed."
+    },
+    {
+      "key": "transcribe", "min_gb": 6, "name": "Transcribe", "size": "~8 GB + 3.3 GB models",
+      "desc": "Audio or video to text and subtitles, split by speaker.",
+      "remove": ["tools\\whisperx"],
+      "keep": [],
+      "models": ["models\\diarization", "models\\torch\\hub\\checkpoints\\wav2vec2_fairseq_base_ls960_asr_ls960.pth",
+                 "models\\huggingface\\hub\\models--Systran--faster-whisper-large-v3"],
+      "locks": ["whisperx.txt"],
+      "remove_note": "The piano checker (scripts\\piano_check.py) runs on Transcribe's engine and stops working too."
+    },
+    {
+      "key": "narrate", "min_gb": 0, "name": "Narrate", "size": "~7.5 GB + 0.4 GB models",
+      "desc": "Documents read aloud (the wise old narrator, or preset voices) with subtitles and an optional video.",
+      "remove": ["tools\\narrate"],
+      "keep": [],
+      "models": ["models\\huggingface\\hub\\models--hexgrad--Kokoro-82M"],
+      "locks": ["narrate.txt"]
+    },
+    {
+      "key": "abogen", "min_gb": 0, "name": "Abogen audiobooks", "size": "~8 GB (uses Narrate's voices)",
+      "desc": "Desktop app: whole books to audiobooks with chapters and subtitles.",
+      "remove": ["tools\\abogen"],
+      "keep": [],
+      "models": ["models\\huggingface\\hub\\models--hexgrad--Kokoro-82M"],
+      "locks": ["abogen.txt"]
+    },
+    {
+      "key": "acestep", "min_gb": 8, "name": "ACE-Step music", "size": "~8 GB + 14 GB models (XL +19 GB)",
+      "desc": "Songs, covers and restyles from a text description. Opens in your browser.",
+      "remove": ["tools\\ACE-Step-1.5"],
+      "keep": ["tools\\ACE-Step-1.5\\gradio_outputs", "tools\\ACE-Step-1.5\\lora_output", "tools\\ACE-Step-1.5\\datasets"],
+      "models": ["tools\\ACE-Step-1.5\\checkpoints", "models\\huggingface\\hub\\models--ACE-Step--Ace-Step1.5",
+                 "models\\huggingface\\hub\\models--ACE-Step--acestep-v15-base", "models\\huggingface\\hub\\models--ACE-Step--acestep-v15-xl-turbo",
+                 "models\\huggingface\\hub\\models--ACE-Step--acestep-v15-xl-sft"],
+      "locks": ["ACE-Step-1.5.reference.txt"]
+    },
+    {
+      "key": "hum", "min_gb": 0, "name": "Hum to track", "size": "~0.5 GB",
+      "desc": "Hum, sing or beatbox a part; get an instrument playing it (MIDI + audio).",
+      "remove": ["tools\\humtools", "tools\\fluidsynth"],
+      "keep": [],
+      "models": ["models\\soundfonts"],
+      "locks": ["humtools.txt"]
+    },
+    {
+      "key": "separate", "min_gb": 6, "name": "Stem separation", "size": "~7.5 GB + 0.9 GB models",
+      "desc": "Split songs into vocals and instrumental, or vocals, drums, bass and other.",
+      "remove": ["tools\\separator"],
+      "keep": [],
+      "models": ["models\\separator"],
+      "locks": ["separator.txt"]
+    },
+    {
+      "key": "applio", "min_gb": 6, "name": "Applio voice changer", "size": "~7.5 GB + 2.1 GB models",
+      "desc": "Train a voice model, then re-voice your own performance. Opens in your browser.",
+      "remove": ["tools\\Applio"],
+      "keep": ["tools\\Applio\\logs", "tools\\Applio\\assets\\audios", "tools\\Applio\\assets\\datasets"],
+      "models": ["tools\\Applio\\rvc\\models"],
+      "locks": ["Applio.txt"],
+      "remove_note": "Voice models you trained (tools\\Applio\\logs) are kept."
+    },
+    {
+      "key": "comfyui", "min_gb": 8, "name": "ComfyUI voices", "size": "~8 GB + 8 GB models",
+      "desc": "Voice cloning, voice conversion and subtitle narration (ChatterBox, VibeVoice). Browser app.",
+      "remove": ["tools\\ComfyUI"],
+      "keep": ["tools\\ComfyUI\\output", "tools\\ComfyUI\\input", "tools\\ComfyUI\\user", "tools\\ComfyUI\\models\\voices"],
+      "models": ["tools\\ComfyUI\\models", "models\\huggingface\\hub\\models--Qwen--Qwen3-TTS-12Hz-1.7B-Base",
+                 "models\\huggingface\\hub\\models--Qwen--Qwen3-TTS-12Hz-1.7B-VoiceDesign"],
+      "locks": ["ComfyUI.txt"],
+      "also_stop": ["narrate", "narrate_video"],
+      "remove_note": "Narrate's cloned and designed voices (such as the wise old narrator) need this. Without it Narrate uses its built-in preset voices."
+    }
+  ],
+  "tools": [
+    {
+      "key": "ace_xl", "component": "acestep", "kind": "web", "group": "Browser apps",
+      "name": "ACE-Step music (best sound)", "desc": "Songs, covers and restyles, best sound. Opens in your browser.",
+      "bat": "ACE-Step (music).bat", "port": 7860, "url": "http://127.0.0.1:7860",
+      "results": "tools\\ACE-Step-1.5\\gradio_outputs", "indir": null, "filter": null,
+      "needs": ["tools\\ACE-Step-1.5\\.venv\\Scripts\\acestep.exe", "tools\\ACE-Step-1.5\\checkpoints\\acestep-v15-xl-turbo\\config.json"]
+    },
+    {
+      "key": "ace_fast", "component": "acestep", "kind": "web", "group": "Browser apps",
+      "name": "ACE-Step music (fast)", "desc": "The same app with the smaller model, for quick ideas.",
+      "bat": "ACE-Step (music, fast).bat", "port": 7860, "url": "http://127.0.0.1:7860",
+      "results": "tools\\ACE-Step-1.5\\gradio_outputs", "indir": null, "filter": null,
+      "needs": ["tools\\ACE-Step-1.5\\.venv\\Scripts\\acestep.exe", "tools\\ACE-Step-1.5\\checkpoints\\acestep-v15-turbo"]
+    },
+    {
+      "key": "comfy", "component": "comfyui", "kind": "web", "group": "Browser apps",
+      "name": "ComfyUI voices", "desc": "Voice cloning, voice conversion and subtitle narration.",
+      "bat": "ComfyUI (voices).bat", "port": 8189, "url": "http://127.0.0.1:8189",
+      "results": "tools\\ComfyUI\\output", "indir": null, "filter": null,
+      "needs": ["tools\\ComfyUI\\.venv\\Scripts\\python.exe", "tools\\ComfyUI\\main.py"]
+    },
+    {
+      "key": "applio", "component": "applio", "kind": "web", "group": "Browser apps",
+      "name": "Applio voice changer", "desc": "Train a voice, then re-voice your own performance.",
+      "bat": "Applio (voice changer).bat", "port": 6969, "url": "http://127.0.0.1:6969",
+      "results": "tools\\Applio\\assets\\audios", "indir": null, "filter": null,
+      "needs": ["tools\\Applio\\.venv\\Scripts\\python.exe", "tools\\Applio\\core.py"]
+    },
+    {
+      "key": "abogen", "component": "abogen", "kind": "app", "group": "Desktop app",
+      "name": "Abogen audiobooks", "desc": "Whole books to audiobooks with chapters and subtitles.",
+      "bat": "Abogen (audiobooks).bat", "port": 0, "url": null,
+      "results": null, "indir": null, "filter": null,
+      "needs": ["tools\\abogen\\.venv\\Scripts\\abogen.exe"]
+    },
+    {
+      "key": "transcribe", "component": "transcribe", "kind": "watch", "group": "Drop-folder tools",
+      "name": "Transcribe", "desc": "Audio or video to text and subtitles, split by speaker.",
+      "bat": "Transcribe.bat", "port": 0, "url": null,
+      "results": "transcribe\\out", "indir": "transcribe\\in",
+      "filter": "Audio and video|*.wav;*.mp3;*.m4a;*.flac;*.ogg;*.opus;*.aac;*.wma;*.mp4;*.mkv;*.mov;*.webm;*.avi;*.m4v|All files|*.*",
+      "needs": ["tools\\whisperx\\.venv\\Scripts\\python.exe"]
+    },
+    {
+      "key": "narrate", "component": "narrate", "kind": "watch", "group": "Drop-folder tools",
+      "name": "Narrate", "desc": "Documents to natural narration with subtitles.",
+      "bat": "Narrate.bat", "port": 0, "url": null,
+      "results": "narrate\\out", "indir": "narrate\\in",
+      "filter": "Documents|*.txt;*.md;*.docx;*.pdf;*.epub;*.html;*.htm|All files|*.*",
+      "needs": ["tools\\narrate\\.venv\\Scripts\\python.exe"]
+    },
+    {
+      "key": "narrate_video", "component": "narrate", "kind": "watch", "group": "Drop-folder tools",
+      "name": "Narrate to video", "desc": "Narration plus an MP4 with the subtitles burned in.",
+      "bat": "Narrate to video.bat", "port": 0, "url": null,
+      "results": "narrate\\out", "indir": "narrate\\in",
+      "filter": "Documents|*.txt;*.md;*.docx;*.pdf;*.epub;*.html;*.htm|All files|*.*",
+      "needs": ["tools\\narrate\\.venv\\Scripts\\python.exe"]
+    },
+    {
+      "key": "hum", "component": "hum", "kind": "files", "group": "Drop-on tools",
+      "name": "Hum to track", "desc": "Hum, sing or beatbox a part; get an instrument playing it.",
+      "bat": "Hum to track.bat", "port": 0, "url": null,
+      "results": "music\\out", "indir": null,
+      "filter": "Audio|*.wav;*.mp3;*.m4a;*.flac;*.ogg;*.opus;*.aac;*.mp4;*.mov|All files|*.*",
+      "needs": ["tools\\humtools\\.venv\\Scripts\\python.exe"]
+    },
+    {
+      "key": "sep_vocals", "component": "separate", "kind": "files", "group": "Drop-on tools",
+      "name": "Separate vocals", "desc": "Split songs into vocals and instrumental.",
+      "bat": "Separate vocals.bat", "port": 0, "url": null,
+      "results": "music\\stems", "indir": null,
+      "filter": "Audio|*.wav;*.mp3;*.m4a;*.flac;*.ogg;*.opus;*.aac|All files|*.*",
+      "needs": ["tools\\separator\\.venv\\Scripts\\audio-separator.exe"]
+    },
+    {
+      "key": "sep_stems", "component": "separate", "kind": "files", "group": "Drop-on tools",
+      "name": "Separate stems", "desc": "Split songs into vocals, drums, bass and other.",
+      "bat": "Separate stems (vocals, drums, bass, other).bat", "port": 0, "url": null,
+      "results": "music\\stems", "indir": null,
+      "filter": "Audio|*.wav;*.mp3;*.m4a;*.flac;*.ogg;*.opus;*.aac|All files|*.*",
+      "needs": ["tools\\separator\\.venv\\Scripts\\audio-separator.exe"]
+    }
+  ]
+}

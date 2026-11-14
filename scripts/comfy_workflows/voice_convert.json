@@ -1,0 +1,52 @@
+{
+  "1": {
+    "class_type": "LoadAudio",
+    "inputs": { "audio": "speech_female_short.wav" },
+    "_meta": { "title": "reference voice" }
+  },
+  "2": {
+    "class_type": "CharacterVoicesNode",
+    "inputs": {
+      "voice_name": "none",
+      "reference_text": "",
+      "trim_start": 0.0,
+      "trim_end": 0.0,
+      "customized": false,
+      "opt_audio_input": ["1", 0]
+    },
+    "_meta": { "title": "target voice from the reference clip" }
+  },
+  "3": {
+    "class_type": "ChatterBoxEngineNode",
+    "inputs": {
+      "language": "English",
+      "device": "auto",
+      "exaggeration": 0.5,
+      "temperature": 0.8,
+      "cfg_weight": 0.5
+    },
+    "_meta": { "title": "ChatterBox engine" }
+  },
+  "4": {
+    "class_type": "LoadAudio",
+    "inputs": { "audio": "speech_male_short.wav" },
+    "_meta": { "title": "source audio" }
+  },
+  "5": {
+    "class_type": "UnifiedVoiceChangerNode",
+    "inputs": {
+      "TTS_engine": ["3", 0],
+      "source_audio": ["4", 0],
+      "narrator_target": ["2", 0],
+      "refinement_passes": 1,
+      "max_chunk_duration": 30,
+      "chunk_method": "smart"
+    },
+    "_meta": { "title": "convert the source into the target voice" }
+  },
+  "6": {
+    "class_type": "SaveAudio",
+    "inputs": { "audio": ["5", 0], "filename_prefix": "voices/converted" },
+    "_meta": { "title": "save" }
+  }
+}

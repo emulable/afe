@@ -1,0 +1,143 @@
+{
+    "generated":  "2026-11-14 11:03:24",
+    "note":  "Written by setup\\freeze_locks.ps1 from the working install. Read by setup\\install.ps1.",
+    "uv":  "0.12.5",
+    "pythons":  [
+                    "3.10.21",
+                    "3.11.16",
+                    "3.12.14"
+                ],
+    "envs":  {
+                 "whisperx":  {
+                                  "dir":  "tools\\whisperx",
+                                  "python":  "3.12.14",
+                                  "method":  "lock",
+                                  "lock":  "whisperx.txt",
+                                  "indexes":  [
+                                                  "https://download.pytorch.org/whl/cu129"
+                                              ],
+                                  "seed":  false,
+                                  "packages":  104
+                              },
+                 "narrate":  {
+                                 "dir":  "tools\\narrate",
+                                 "python":  "3.12.14",
+                                 "method":  "lock",
+                                 "lock":  "narrate.txt",
+                                 "indexes":  [
+                                                 "https://download.pytorch.org/whl/cu128"
+                                             ],
+                                 "seed":  false,
+                                 "packages":  111
+                             },
+                 "abogen":  {
+                                "dir":  "tools\\abogen",
+                                "python":  "3.12.14",
+                                "method":  "lock",
+                                "lock":  "abogen.txt",
+                                "indexes":  [
+                                                "https://download.pytorch.org/whl/cu128"
+                                            ],
+                                "seed":  false,
+                                "packages":  154
+                            },
+                 "humtools":  {
+                                  "dir":  "tools\\humtools",
+                                  "python":  "3.10.21",
+                                  "method":  "lock",
+                                  "lock":  "humtools.txt",
+                                  "indexes":  [
+
+                                              ],
+                                  "seed":  false,
+                                  "packages":  42
+                              },
+                 "separator":  {
+                                   "dir":  "tools\\separator",
+                                   "python":  "3.12.14",
+                                   "method":  "lock",
+                                   "lock":  "separator.txt",
+                                   "indexes":  [
+                                                   "https://download.pytorch.org/whl/cu128"
+                                               ],
+                                   "seed":  false,
+                                   "packages":  61
+                               },
+                 "Applio":  {
+                                "dir":  "tools\\Applio",
+                                "python":  "3.12.14",
+                                "method":  "lock",
+                                "lock":  "Applio.txt",
+                                "indexes":  [
+                                                "https://download.pytorch.org/whl/cu128"
+                                            ],
+                                "seed":  false,
+                                "packages":  134
+                            },
+                 "ComfyUI":  {
+                                 "dir":  "tools\\ComfyUI",
+                                 "python":  "3.12.14",
+                                 "method":  "lock",
+                                 "lock":  "ComfyUI.txt",
+                                 "indexes":  [
+                                                 "https://download.pytorch.org/whl/cu130"
+                                             ],
+                                 "seed":  true,
+                                 "packages":  347
+                             },
+                 "ACE-Step-1.5":  {
+                                      "dir":  "tools\\ACE-Step-1.5",
+                                      "python":  "3.11.16",
+                                      "method":  "uv-sync-frozen",
+                                      "lock":  "ACE-Step-1.5.reference.txt",
+                                      "indexes":  [
+                                                      "https://download.pytorch.org/whl/cu128"
+                                                  ],
+                                      "seed":  false,
+                                      "packages":  123
+                                  }
+             },
+    "repos":  {
+                  "ACE-Step-1.5":  {
+                                       "dir":  "tools\\ACE-Step-1.5",
+                                       "url":  "https://github.com/ace-step/ACE-Step-1.5",
+                                       "commit":  "ca1e85fe9430179831e6bc6be790c332190a3866",
+                                       "branch":  "main"
+                                   },
+                  "Applio":  {
+                                 "dir":  "tools\\Applio",
+                                 "url":  "https://github.com/IAHispano/Applio",
+                                 "commit":  "6d5d9511b7e719b1f613362bc767e841ad72fa72",
+                                 "branch":  "main"
+                             },
+                  "ComfyUI":  {
+                                  "dir":  "tools\\ComfyUI",
+                                  "url":  "https://github.com/comfyanonymous/ComfyUI",
+                                  "commit":  "102350eb949bca599e450a904f0562ad3f551279",
+                                  "branch":  "master"
+                              },
+                  "TTS-Audio-Suite":  {
+                                          "dir":  "tools\\ComfyUI\\custom_nodes\\TTS-Audio-Suite",
+                                          "url":  "https://github.com/diodiogod/TTS-Audio-Suite",
+                                          "commit":  "2245cd7e8588bf46109f07272d1412ef2defae30",
+                                          "branch":  "main"
+                                      }
+              },
+    "dropped":  [
+                    {
+                        "env":  "ComfyUI",
+                        "line":  "fish-speech @ file:\u003clocal path\u003e",
+                        "reason":  "installed by TTS-Audio-Suite install.py (it patches the upstream wheel)"
+                    },
+                    {
+                        "env":  "ACE-Step-1.5",
+                        "line":  "-e file:\u003clocal path\u003e",
+                        "reason":  "the ACE-Step project itself, installed by uv sync --frozen"
+                    },
+                    {
+                        "env":  "ACE-Step-1.5",
+                        "line":  "nano-vllm @ file:\u003clocal path\u003e",
+                        "reason":  "bundled in the ACE-Step repo, installed by uv sync --frozen"
+                    }
+                ]
+}

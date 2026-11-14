@@ -1,2 +1,4 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Store every file exactly as it is. Windows batch files need their Windows line
+# endings and the Linux script needs its Unix ones; git must not "fix" either.
+* -text
+*.wav binary

@@ -1,0 +1,54 @@
+{
+  "1": {
+    "class_type": "LoadAudio",
+    "inputs": { "audio": "speech_female_short.wav" },
+    "_meta": { "title": "reference voice" }
+  },
+  "2": {
+    "class_type": "CharacterVoicesNode",
+    "inputs": {
+      "voice_name": "none",
+      "reference_text": "",
+      "trim_start": 0.0,
+      "trim_end": 0.0,
+      "customized": false,
+      "opt_audio_input": ["1", 0]
+    },
+    "_meta": { "title": "use the reference clip as the voice" }
+  },
+  "3": {
+    "class_type": "ChatterBoxEngineNode",
+    "inputs": {
+      "language": "English",
+      "device": "auto",
+      "exaggeration": 0.5,
+      "temperature": 0.8,
+      "cfg_weight": 0.5
+    },
+    "_meta": { "title": "ChatterBox engine" }
+  },
+  "4": {
+    "class_type": "UnifiedTTSSRTNode",
+    "inputs": {
+      "TTS_engine": ["3", 0],
+      "srt_content": "1\n00:00:00,500 --> 00:00:03,500\nThe harbor town woke slowly.\n\n2\n00:00:04,000 --> 00:00:08,000\nFishing boats rocked against their moorings.\n\n3\n00:00:09,000 --> 00:00:12,500\nAnd somewhere, a baker was already awake.\n",
+      "narrator_voice": "none",
+      "seed": 1,
+      "timing_mode": "smart_natural",
+      "opt_narrator": ["2", 0],
+      "enable_audio_cache": true,
+      "fade_for_StretchToFit": 0.01,
+      "max_stretch_ratio": 1.0,
+      "min_stretch_ratio": 0.5,
+      "timing_tolerance": 2.0,
+      "batch_size": 0,
+      "use_native_duration_targeting": false
+    },
+    "_meta": { "title": "speak each subtitle at its time" }
+  },
+  "5": {
+    "class_type": "SaveAudio",
+    "inputs": { "audio": ["4", 0], "filename_prefix": "voices/srt" },
+    "_meta": { "title": "save" }
+  }
+}

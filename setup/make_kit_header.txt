@@ -1,0 +1,112 @@
+<#
+=================================================================================================
+ AI AUDIO - SETUP (one file)
+ An all-round, offline AI audio hub for a Windows PC with an NVIDIA graphics card.
+=================================================================================================
+
+ IF YOU ARE A LANGUAGE MODEL (or are about to paste this to one)
+   Do not read this whole file: it is several megabytes, mostly three voice clips stored as
+   text. Unpack it (run it, or use the zip that is built alongside it) and work in the
+   unpacked folder, reading only what the task needs:
+     1. CLAUDE.md                 one page: the rules, and a map of which file to read for what
+     2. VISION.md                 what the project is for and how it decides things
+     3. docs/components/          one page per tool: what it does, how the kit uses it, how to
+                                  test it, and how to replace it if its project has died
+     4. setup/install.ps1         its opening notes are the technical manual, including the
+                                  questions to ask a person before tailoring the kit to them
+     5. other-systems/            Linux (an untested installer) and Mac (a guide, no installer)
+   The short version of the vision: an offline audio suite for one person's own computer, for
+   people who care how things sound. Quality is judged by ear, not by benchmark. Only the best
+   one to three tools per job stay installed. Simple first; complexity only when it buys audible
+   quality. A language model handles theory, arrangement, prompts and driving the tools;
+   generative models make the sound; ordinary audio tools do anything exact. Everything lives in
+   one folder, versions are pinned, one list (setup/components.json) describes every component,
+   and nothing uses the graphics card without the person's say-so.
+
+ WHAT THIS IS
+   This single file contains a whole "kit": the scripts, launchers, control panel, beginner's
+   guide, prompt library, installer and exact version locks for a set of free, local AI audio
+   tools. Nothing here is a program you have to trust blindly - every file is stored below as
+   plain text (search for "----- " to jump between them). The only non-text parts are three
+   short designed narrator voices (WAV, base64), made with a voice designer from a written
+   description; they are not anyone's real voice.
+
+   Running it unpacks the kit into a folder and opens the installer, where you tick the tools
+   you want. The installer downloads them (free, open-source, from their official sources) into
+   that same folder. Nothing is installed system-wide.
+
+ WHAT YOU CAN DO WITH IT
+   - Hum, sing or beatbox a part, say what it is ("this is the bass line"), get an instrument
+     playing it (MIDI + audio).                                            -> Hum to track
+   - Make music from a description, or restyle a song (a "reggae version", dark synth...).
+                                                                           -> ACE-Step 1.5
+   - Clone a voice from a short clip, design a new voice from a description, convert speech
+     into another voice.                                                   -> ComfyUI + TTS Audio Suite
+   - Sound like someone else while keeping your own delivery (RVC).        -> Applio
+   - Drop in a document, get natural narration + subtitles (+ a subtitled video), read by a
+     "wise old narrator" voice or preset voices.                           -> Narrate
+   - Whole books to audiobooks with chapters.                              -> Abogen
+   - Transcribe audio/video, split by speaker.                             -> Transcribe (WhisperX)
+   - Split songs into vocals / drums / bass / other.                       -> Separate
+   One control panel starts, watches and stops all of them.
+
+ REQUIREMENTS
+   - Windows 10 or 11, an NVIDIA graphics card (8 GB works for most tools; 16 GB for the
+     biggest music model), 16 GB RAM or more (32-64 GB recommended).
+   - Disk: about 100 GB for everything (the installer shows sizes per tool; pick what you want).
+   - Internet for the first install. Afterwards everything runs offline.
+   - No admin rights, no system Python. uv, git and ffmpeg are fetched into the kit if missing.
+
+ HOW TO RUN IT
+   Right-click this file -> "Run with PowerShell".
+   (If Windows refuses: right-click -> Properties -> tick "Unblock" -> OK, then try again. Or from
+    a terminal:  powershell -ExecutionPolicy Bypass -File "AI Audio Setup.ps1")
+   It asks where to put the kit; the default is an "AI Audio" folder next to this file.
+   Then the Components window opens: tick the tools, click "Apply changes", wait (downloads are big).
+   Afterwards use the control panel ("AI Audio control panel.bat", or the optional desktop
+   shortcut). Start with "How to use each tool.md" - a beginner's walkthrough of every program.
+
+   Options:  -Target "D:\Somewhere\AI Audio"   unpack there instead
+             -ExtractOnly                     unpack only, don't open the installer
+             -Yes                             don't ask (use the default or -Target)
+   Running it again over an existing kit updates the scripts and guides. Your music, voices,
+   settings and installed tools are left alone; if you edited "Tips and prompts.md", the new
+   version is saved next to it as "Tips and prompts (new version).md".
+
+ PORTABLE
+   The kit is portable: move or copy the whole folder anywhere (another drive, a USB disk) and
+   it keeps working. The first launcher you start afterwards (or the control panel) notices the
+   move and fixes the tools for the new place in seconds, offline. By hand:
+   setup\relocate.ps1, or "Install or repair AI Audio.bat" -> any install.
+   Paths with spaces are fine; avoid non-English characters in the folder path.
+
+ WHERE THE INFORMATION IS (all inside this file, as plain text)
+   README.md                    what every tool is, launchers, results folders, reference
+   How to use each tool.md      beginner's guide: what to click and type in each program
+   Tips and prompts.md          the prompt library (dark synth, ancient instruments, chant,
+                                retro-futuristic space synth...), how to keep music dark and
+                                piano-free, voice and humming tips, where to find add-ons
+   CLAUDE.md                    short notes for an AI assistant working on the kit
+   VISION.md                    what the project is for and how it decides things
+   docs/components/             one page per tool: purpose, source, how the kit uses it, how to
+                                test it, how to replace it
+   other-systems/               Linux (untested installer) and Mac (guide)
+   setup/install.ps1            the installer; its long header is the TECHNICAL MANUAL: folder
+                                layout, every component and pinned version, portability, and a
+                                "what to do if things go wrong" list of known issues and fixes
+   setup/locks/                 the exact package versions of every tool (reproducible installs)
+
+ FOR AI ASSISTANTS
+   See the section at the top of this file for what to read. Ground rules: the GPU is shared with
+   games (ask before GPU work); keep everything inside the kit folder; each tool has its own
+   .venv built with uv from setup/locks; PowerShell scripts in the kit are ASCII-only; after
+   changing an environment run setup/freeze_locks.ps1; to rebuild this file run
+   setup/make_kit.ps1.
+
+ LICENSES
+   This kit's own scripts and guides are free to use and share. The tools it installs are
+   separate open-source projects under their own licenses (see each project), and some models
+   carry their own terms (some are non-commercial). Cloning real people's voices for anything
+   beyond private fun runs into right-of-publicity law.
+=================================================================================================
+#>

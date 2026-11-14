@@ -1,0 +1,32 @@
+# Only the kit itself belongs in git. Everything the installer downloads, and
+# everything you make or note down yourself, stays out.
+
+# downloaded tools, models, Python and caches
+/.cache/
+/models/
+/python/
+/tools/
+/logs/
+/dist/
+__pycache__/
+*.pyc
+
+# your own work
+/music/
+/narrate/
+/transcribe/
+/listening/
+/voices/out/
+/voices/reference/*
+!/voices/reference/wise_old_narrator*
+!/voices/reference/wise_old_scholar.*
+/samples/*
+!/samples/*.md
+
+# your own notes and this PC's records
+/My PC notes.md
+/plans/
+/setup/kit-location.txt
+/setup/private-words.txt
+/setup/gpu-memory.txt
+/scripts/control_panel.settings.json

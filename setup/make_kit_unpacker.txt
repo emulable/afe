@@ -1,0 +1,80 @@
+# ============================================================================================
+#  UNPACKING (runs after all the files above have been read in)
+# ============================================================================================
+$Here = $PSScriptRoot
+if (-not $Here) { $Here = (Get-Location).Path }
+$Default = Join-Path $Here 'AI Audio'
+$Gui = -not $Yes
+if ($Gui) { try { Add-Type -AssemblyName System.Windows.Forms } catch { $Gui = $false } }
+
+function Show-Message([string]$Text, [string]$Buttons = 'OK', [string]$Icon = 'Information') {
+    if ($Gui) { return [string][System.Windows.Forms.MessageBox]::Show($Text, 'AI Audio setup', $Buttons, $Icon) }
+    Write-Host $Text
+    return 'OK'
+}
+
+if (-not $Target) {
+    $Target = $Default
+    if ($Gui) {
+        $answer = Show-Message ("Set up AI Audio in this folder?`n`n   $Default`n`nYes = here, next to the setup file (portable; recommended)`nNo = choose another folder`nCancel = stop") 'YesNoCancel' 'Question'
+        if ($answer -eq 'Cancel') { exit 1 }
+        if ($answer -eq 'No') {
+            $dlg = New-Object System.Windows.Forms.FolderBrowserDialog
+            $dlg.Description = 'Choose where to put the AI Audio folder (about 100 GB if you install everything)'
+            $dlg.SelectedPath = $Here
+            if ($dlg.ShowDialog() -ne 'OK') { exit 1 }
+            $Target = $dlg.SelectedPath
+            # use the chosen folder itself if it is empty or already an AI Audio kit; otherwise make "AI Audio" inside it
+            $isKit = Test-Path (Join-Path $Target 'setup\install.ps1')
+            $isEmpty = -not (Get-ChildItem $Target -Force -ErrorAction SilentlyContinue | Select-Object -First 1)
+            if (-not $isKit -and -not $isEmpty) { $Target = Join-Path $Target 'AI Audio' }
+        }
+    }
+}
+$Target = [IO.Path]::GetFullPath($Target).TrimEnd('\')
+if ($Target -match '[^\x20-\x7E]') {
+    $go = Show-Message "The folder path contains non-English characters:`n`n$Target`n`nSome tools (Applio) refuse such paths. Continue anyway?" 'YesNo' 'Warning'
+    if ($go -eq 'No') { exit 1 }
+}
+
+$existingKit = Test-Path (Join-Path $Target 'setup\install.ps1')
+$keepIfEdited = @('Tips and prompts.md')        # the user's own notebook
+New-Item -ItemType Directory -Force -Path $Target | Out-Null
+$utf8 = New-Object Text.UTF8Encoding($false)
+$written = 0; $kept = @()
+foreach ($k in $KitFiles) {
+    $dest = Join-Path $Target ($k.Path -replace '/', '\')
+    New-Item -ItemType Directory -Force -Path (Split-Path $dest -Parent) | Out-Null
+    if ($k.Kind -eq 'binary') {
+        if (Test-Path $dest) { continue }             # never replace voices that are already there
+        [IO.File]::WriteAllBytes($dest, [Convert]::FromBase64String(($k.Data -replace '\s', '')))
+        $written++
+        continue
+    }
+    $lines = ($k.Data -replace "`r`n", "`n") -split "`n" | ForEach-Object { if ($_.StartsWith('<<AIA>>')) { $_.Substring(7) } else { $_ } }
+    $text = $lines -join "`n"
+    if ($k.Final) { $text += "`n" }
+    if ($k.Eol -eq 'crlf') { $text = $text -replace "`n", "`r`n" }
+    if ($existingKit -and ($keepIfEdited -contains $k.Path) -and (Test-Path $dest)) {
+        if ([IO.File]::ReadAllText($dest) -ne $text) {
+            $kept += $k.Path
+            $dest = [IO.Path]::Combine((Split-Path $dest -Parent), [IO.Path]::GetFileNameWithoutExtension($dest) + ' (new version)' + [IO.Path]::GetExtension($dest))
+        }
+    }
+    [IO.File]::WriteAllText($dest, $text, $utf8)
+    $written++
+}
+
+$msg = "AI Audio kit unpacked into:`n`n   $Target`n`n($written files"
+if ($existingKit) { $msg += '; your tools, music, voices and settings were left as they were' }
+$msg += ')'
+if ($kept.Count) { $msg += "`n`nYou had edited $($kept -join ', '), so the new version was saved next to it as '(new version)'." }
+if ($ExtractOnly) {
+    $msg += "`n`nTo install the tools, run 'Install or repair AI Audio.bat' in that folder."
+    [void](Show-Message $msg)
+    exit 0
+}
+$msg += "`n`nThe Components window opens next: tick the tools you want and click 'Apply changes'. Start with 'How to use each tool.md' once it's done."
+[void](Show-Message $msg)
+Start-Process -FilePath 'powershell.exe' -ArgumentList @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-STA', '-WindowStyle', 'Hidden', '-File', ('"' + (Join-Path $Target 'setup\install.ps1') + '"'))
+exit 0

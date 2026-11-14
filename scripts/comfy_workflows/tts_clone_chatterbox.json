@@ -1,0 +1,52 @@
+{
+  "1": {
+    "class_type": "LoadAudio",
+    "inputs": { "audio": "speech_female_short.wav" },
+    "_meta": { "title": "reference voice" }
+  },
+  "2": {
+    "class_type": "CharacterVoicesNode",
+    "inputs": {
+      "voice_name": "none",
+      "reference_text": "",
+      "trim_start": 0.0,
+      "trim_end": 0.0,
+      "customized": false,
+      "opt_audio_input": ["1", 0]
+    },
+    "_meta": { "title": "use the reference clip as the voice" }
+  },
+  "3": {
+    "class_type": "ChatterBoxEngineNode",
+    "inputs": {
+      "language": "English",
+      "device": "auto",
+      "exaggeration": 0.5,
+      "temperature": 0.8,
+      "cfg_weight": 0.5
+    },
+    "_meta": { "title": "ChatterBox engine (exaggeration = how dramatic)" }
+  },
+  "4": {
+    "class_type": "UnifiedTTSTextNode",
+    "inputs": {
+      "TTS_engine": ["3", 0],
+      "text": "Hello there. This voice was cloned from a short recording, and it can read anything you give it.",
+      "narrator_voice": "none",
+      "seed": 1,
+      "opt_narrator": ["2", 0],
+      "enable_chunking": true,
+      "max_chars_per_chunk": 400,
+      "chunk_combination_method": "auto",
+      "silence_between_chunks_ms": 100,
+      "enable_audio_cache": true,
+      "batch_size": 0
+    },
+    "_meta": { "title": "text to speak" }
+  },
+  "5": {
+    "class_type": "SaveAudio",
+    "inputs": { "audio": ["4", 0], "filename_prefix": "voices/clone" },
+    "_meta": { "title": "save" }
+  }
+}
